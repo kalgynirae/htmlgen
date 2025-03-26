@@ -1,8 +1,17 @@
 [project]
 name = "htmlgen"
 version = "0.1.0"
+description = "Simple library for generating HTML"
+readme = "README.md"
+authors = [
+    { name = "Colin Chan", email = "colin+git@lumeh.org" }
+]
 requires-python = ">=3.13"
 dependencies = []
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
 
 [dependency-groups]
 dev = [

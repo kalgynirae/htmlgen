@@ -137,7 +137,7 @@ class Registry:
     def __init__(self) -> None:
         self.styles: dict[str, str] = {}
 
-    def stylesheet(self) -> str:
+    def render_stylesheet(self) -> str:
         return "\n".join(
             f".{name} {{\n{textwrap.indent(style, '  ')}\n}}"
             for name, style in self.styles.items()
@@ -416,52 +416,3 @@ class Tests(unittest.TestCase):
             .render(indent="", inline=False)
         )
         self.assertMultiLineEqual(result, "<div>\n  <p>foo</p>\n  <p>bar</p>\n</div>")
-
-
-def demo() -> None:
-    r = Registry()
-
-    @r.style("""
-        font-size: 1em;
-        font-weight: 700;
-    """)
-    def page_title() -> Element:
-        return Element("h1").containing("Demo Page")
-
-    @r.style("""
-        background-color: lightred;
-
-        & > h2 {
-          font-size: 1.5em;
-          font-weight: 300;
-        }
-    """)
-    def demo_box(*contents: Contents) -> Element:
-        return Element("div").containing(
-            Element("h2").containing("Demo Box"),
-            *contents,
-        )
-
-    list_of_things = [
-        Element("p").containing("These are the things:"),
-        Element("ol", attributes={"start": "2", "type": "a"}).containing(
-            Element("li").containing("Minute"),
-            Element("li").containing("Second"),
-            Element("li").containing("Third"),
-        ),
-    ]
-
-    all = HtmlSequence(
-        [
-            page_title(),
-            demo_box(*list_of_things),
-        ]
-    )
-    print("HTML:")
-    print(textwrap.indent(all.render("", False), "| ", lambda line: True))
-    print("CSS:")
-    print(textwrap.indent(r.stylesheet(), "| ", lambda line: True))
-
-
-if __name__ == "__main__":
-    demo()
